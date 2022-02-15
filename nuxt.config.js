@@ -40,6 +40,7 @@ export default {
     'bootstrap-vue/nuxt',
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
+    '@nuxtjs/apollo',
     // https://go.nuxtjs.dev/pwa
     '@nuxtjs/pwa'
   ],
@@ -59,5 +60,14 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
+  },
+
+  // Apollo client config
+  apollo: {
+    clientConfigs: {
+      default: {
+        httpEndpoint: 'https://zakirshop20.myshopify.com/api/2022-01/graphql.json'
+      }
+    }
   }
 }
