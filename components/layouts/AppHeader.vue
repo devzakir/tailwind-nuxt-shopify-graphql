@@ -25,7 +25,7 @@
             </button>
 
             <!-- Logo -->
-            <div class="ml-4 flex lg:ml-0">
+            <div class="flex lg:ml-0">
               <nuxt-link :to="{ name: 'index'}">
                 <span class="sr-only">Workflow</span>
                 <img class="h-8 w-auto" src="https://tailwindui.com/img/logos/workflow-mark.svg?color=indigo&shade=600" alt="">

@@ -66,7 +66,14 @@ export default {
   apollo: {
     clientConfigs: {
       default: {
-        httpEndpoint: 'https://zakirshop20.myshopify.com/api/2022-01/graphql.json'
+        httpEndpoint: 'https://zakirshop20.myshopify.com/api/2022-01/graphql.json',
+        httpLinkOptions: {
+          // credentials: 'same-origin',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Shopify-Storefront-Access-Token': '2740f14865b0438f6d49e3dea9eda8b5'
+          }
+        }
       }
     }
   }
