@@ -1,19 +1,19 @@
 <template>
-  <div class="bg-white">
-    <div class="max-w-2xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
-      <h2 class="sr-only">
-        Products
-      </h2>
-
-      <div class="grid grid-cols-1 gap-y-10 sm:grid-cols-2 gap-x-6 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
-        <product-item v-for="product in products" :key="product.id" :product="product" />
+  <div>
+    <breadcrumb-bar />
+    <div class="bg-white">
+      <div class="max-w-2xl mx-auto py-16 px-4  sm:px-6 lg:max-w-7xl lg:px-8">
+        <div class="grid grid-cols-1 gap-y-10 sm:grid-cols-2 gap-x-6 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
+          <product-item v-for="product in products" :key="product.id" :product="product" />
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import ProductItem from './product/ProductItem.vue'
+import ProductItem from '../../components/product/ProductItem.vue'
+import BreadcrumbBar from '~/components/BreadcrumbBar.vue'
 const products = [
   {
     id: 1,
@@ -51,7 +51,7 @@ const products = [
 ]
 
 export default {
-  components: { ProductItem },
+  components: { ProductItem, BreadcrumbBar },
   data () {
     return {
       products
