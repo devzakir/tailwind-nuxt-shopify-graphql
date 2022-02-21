@@ -1,5 +1,5 @@
 <template>
-  <nuxt-link :to="{ name: 'products-slug', params: {slug: product.handle }}" class="group">
+  <nuxt-link :to="{ name: 'products-slug', params: {slug: product.handle}}" class="group">
     <div class="w-full aspect-w-1 aspect-h-1 bg-gray-200 rounded-lg overflow-hidden xl:aspect-w-7 xl:aspect-h-8">
       <img v-if="product.featuredImage && product.featuredImage.url" :src="product.featuredImage.url" :alt="product.featuredImage" class="w-full h-full object-center object-cover group-hover:opacity-75">
     </div>
