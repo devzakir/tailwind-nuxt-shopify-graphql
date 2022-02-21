@@ -4,7 +4,7 @@
     <div class="bg-white">
       <div class="max-w-2xl mx-auto py-16 px-4  sm:px-6 lg:max-w-7xl lg:px-8">
         <div class="grid grid-cols-1 gap-y-10 sm:grid-cols-2 gap-x-6 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
-          <product-item v-for="product in products" :key="product.id" :product="product" />
+          <product-item v-for="product in allProducts" :key="product.cursor" :product="product.node" />
         </div>
       </div>
     </div>
@@ -13,9 +13,28 @@
 
 <script>
 import ProductItem from '../../components/product/ProductItem.vue'
+import COLLECTION_PRODUCTS from '../../graphql/collectionProducts'
 import BreadcrumbBar from '~/components/BreadcrumbBar.vue'
+
 export default {
   components: { BreadcrumbBar, ProductItem },
+
+  async asyncData ({ app, params }) {
+    const client = app.apolloProvider.defaultClient
+    const { slug } = params
+
+    const { data } = await client.query({
+      query: COLLECTION_PRODUCTS,
+      variables: {
+        slug
+      }
+    })
+
+    const collection = data?.collection
+    const allProducts = data?.collection?.products?.edges
+
+    return { allProducts, collection }
+  },
   data () {
     return {
       products: [
