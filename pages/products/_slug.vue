@@ -61,7 +61,7 @@
           </li>
 
           <li class="text-sm">
-            <a href="#" aria-current="page" class="font-medium text-gray-500 hover:text-gray-600"> Basic Tee 6-Pack </a>
+            <a href="#" aria-current="page" class="font-medium text-gray-500 hover:text-gray-600"> {{ product.title }} </a>
           </li>
         </ol>
       </nav>
@@ -69,7 +69,7 @@
       <!-- Image gallery -->
       <div class="mt-6 max-w-2xl mx-auto sm:px-6 lg:max-w-7xl lg:px-8 lg:grid lg:grid-cols-3 lg:gap-x-8">
         <div class="hidden aspect-w-3 aspect-h-4 rounded-lg overflow-hidden lg:block">
-          <img src="https://tailwindui.com/img/ecommerce-images/product-page-02-secondary-product-shot.jpg" alt="Two each of gray, white, and black shirts laying flat." class="w-full h-full object-center object-cover">
+          <img :src="product.featuredImage.url" alt="Two each of gray, white, and black shirts laying flat." class="w-full h-full object-center object-cover">
         </div>
         <div class="hidden lg:grid lg:grid-cols-1 lg:gap-y-8">
           <div class="aspect-w-3 aspect-h-2 rounded-lg overflow-hidden">
@@ -88,7 +88,7 @@
       <div class="max-w-2xl mx-auto pt-10 pb-16 px-4 sm:px-6 lg:max-w-7xl lg:pt-16 lg:pb-24 lg:px-8 lg:grid lg:grid-cols-3 lg:grid-rows-[auto,auto,1fr] lg:gap-x-8">
         <div class="lg:col-span-2 lg:border-r lg:border-gray-200 lg:pr-8">
           <h1 class="text-2xl font-extrabold tracking-tight text-gray-900 sm:text-3xl">
-            Basic Tee 6-Pack
+            {{ product.title }}
           </h1>
         </div>
 
@@ -98,7 +98,7 @@
             Product information
           </h2>
           <p class="text-3xl text-gray-900">
-            $192
+            {{ product.priceRange.maxVariantPrice.currencyCode }} {{ product.priceRange.maxVariantPrice.amount }}
           </p>
 
           <!-- Reviews -->
@@ -309,7 +309,7 @@
               </fieldset>
             </div>
 
-            <button type="submit" class="mt-10 w-full bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            <button type="submit" class="mt-10 w-full bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" @click.prevent="addToCart()">
               Add to bag
             </button>
           </form>
@@ -322,11 +322,7 @@
               Description
             </h3>
 
-            <div class="space-y-6">
-              <p class="text-base text-gray-900">
-                The Basic Tee 6-Pack allows you to fully express your vibrant personality with three grayscale options. Feeling adventurous? Put on a heather gray tee. Want to be a trendsetter? Try our exclusive colorway: &quot;Black&quot;. Need to add an extra pop of color to your outfit? Our white tee has you covered.
-              </p>
-            </div>
+            <div class="space-y-6" v-html="product.descriptionHtml" />
           </div>
 
           <div class="mt-10">
@@ -373,8 +369,41 @@
 </template>
 
 <script>
+import PRODUCT_DETAILS from '../../graphql/productDetails'
+import ADD_TO_CART from '../../graphql/addToCart'
 export default {
+  async asyncData ({ app, params }) {
+    const client = app.apolloProvider.defaultClient
+    const { slug } = params
 
+    const { data } = await client.query({
+      query: PRODUCT_DETAILS,
+      variables: {
+        slug
+      }
+    })
+
+    const product = data?.product
+
+    return { product }
+  },
+  methods: {
+    async addToCart () {
+      const productVariantId = this.product?.variants?.edges[0]?.node?.id
+      const client = this.$nuxt.$apolloProvider.defaultClient
+
+      const { data } = await client.mutate({
+        mutation: ADD_TO_CART,
+        variables: {
+          variantId: productVariantId
+        }
+      })
+
+      const URL = data?.cartCreate?.cart?.checkoutUrl
+
+      window.open(URL, '_blank')
+    }
+  }
 }
 </script>
 
